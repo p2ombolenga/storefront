@@ -6,12 +6,9 @@
             <h1>Hello world</h1>
         {% endif %}
 
-        {% for product in products %}
-            <li>{{ product.title }}</li>
-            <li>{{ product.slug }}</li>
-            <li>{{ product.unit_price }}</li>
-            <li>{{ product.last_update }}</li>
-            <br><br><hr>
+        {% for customer in customers %}
+            {{customer}}
         {% endfor %}
+
     </body>
 </html>
