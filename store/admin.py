@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db.models import Count
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
-from .models import Collection, Product, Customer, Order
+from .models import Collection, Product, Customer, Order, OrderItem
 
 
 class InventoryFilter(admin.SimpleListFilter):
@@ -30,6 +30,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['collection', 'last_update', InventoryFilter]
     list_per_page = 10
     list_select_related = ['collection']
+    search_fields = ['title']
 
     def collection_title(self, product):
         return product.collection.title
@@ -69,12 +70,20 @@ class CustomerAdmin(admin.ModelAdmin):
             orders_count=Count('order')
         )
     
+
+class OrderItemInline(admin.TabularInline):
+    autocomplete_fields = ['product']
+    min_num = 1
+    max_num = 10
+    extra = 0
+    model = OrderItem
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     autocomplete_fields = ['customer']
     list_display = ['placed_at', 'payment_status', 'customer_name']
     list_per_page = 10
     list_select_related = ['customer']
+    inlines = [OrderItemInline]
 
     def customer_name(self, order):
         return order.customer
